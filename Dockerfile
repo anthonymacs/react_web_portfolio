@@ -8,7 +8,14 @@ COPY . /app
 WORKDIR /app
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction \
+    && mkdir -p storage/framework/cache \
+               storage/framework/sessions \
+               storage/framework/testing \
+               storage/framework/views \
+               storage/logs \
+               bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache \
+    && chown -R application:application storage bootstrap/cache \
     && chmod +x docker-entrypoint.sh
 
 CMD ["./docker-entrypoint.sh"]
