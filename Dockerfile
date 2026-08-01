@@ -8,6 +8,7 @@ COPY . /app
 WORKDIR /app
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction \
-    && chmod -R 775 storage bootstrap/cache
+    && chmod -R 775 storage bootstrap/cache \
+    && chmod +x docker-entrypoint.sh
 
-CMD ["supervisord"]
+CMD ["./docker-entrypoint.sh"]
