@@ -1,3 +1,17 @@
+# --- Stage 1: build frontend assets ---
+FROM node:20-alpine AS assets
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci
+
+COPY resources resources
+COPY vite.config.js ./
+RUN npm run build
+
+
+# --- Stage 2: PHP application ---
 FROM webdevops/php-nginx:8.3-alpine
 
 ENV WEB_DOCUMENT_ROOT=/app/public
@@ -6,6 +20,9 @@ ENV APP_DEBUG=false
 
 COPY . /app
 WORKDIR /app
+
+# bring in the compiled JS/CSS from the assets stage
+COPY --from=assets /app/public/build /app/public/build
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction \
     && mkdir -p storage/framework/cache \
