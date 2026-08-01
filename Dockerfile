@@ -14,8 +14,11 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction \
                storage/framework/views \
                storage/logs \
                bootstrap/cache \
-    && chmod -R 775 storage bootstrap/cache \
-    && chown -R application:application storage bootstrap/cache \
+               database \
+    && touch database/database.sqlite \
+    && chmod -R 775 storage bootstrap/cache database \
+    && chmod 664 database/database.sqlite \
+    && chown -R application:application storage bootstrap/cache database \
     && chmod +x docker-entrypoint.sh
 
 CMD ["./docker-entrypoint.sh"]
