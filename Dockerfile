@@ -1,19 +1,13 @@
-FROM richarvey/nginx-php-fpm:php83
+FROM webdevops/php-nginx:8.3-alpine
 
-COPY . .
-
-ENV SKIP_COMPOSER=1
-ENV WEBROOT=/var/www/html/public
-ENV PHP_ERRORS_STDERR=1
-ENV RUN_SCRIPTS=1
-ENV REAL_IP_HEADER=1
-
+ENV WEB_DOCUMENT_ROOT=/app/public
 ENV APP_ENV=production
 ENV APP_DEBUG=false
-ENV LOG_CHANNEL=stderr
 
-ENV COMPOSER_ALLOW_SUPERUSER=1
+COPY . /app
+WORKDIR /app
 
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+RUN composer install --no-dev --optimize-autoloader --no-interaction \
+    && chmod -R 775 storage bootstrap/cache
 
-CMD ["/start.sh"]
+CMD ["supervisord"]
