@@ -16,6 +16,6 @@ services:
       - key: DB_CONNECTION
         value: sqlite
       - key: DB_DATABASE
-        value: /var/www/html/database/database.sqlite
+        value: /app/database/database.sqlite
       - key: LOG_CHANNEL
         value: stderr
